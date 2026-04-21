@@ -226,6 +226,8 @@ public class ResumeUI extends JFrame {
     }
 
     //Action methods
+
+    private void savePersonalInfo() {
         String name  = nameField.getText().trim();
         String email = emailField.getText().trim();
 
