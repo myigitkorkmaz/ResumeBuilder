@@ -5,19 +5,19 @@ public class Project {
     private String endDate;
     private ArrayList<String> descriptionBullets;
 
-    setTitle(String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
-    setStartDate(String startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
-    setEndDate(String endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
-    addDescriptionBullet(String bullet) {
+    public void addDescriptionBullet(String bullet) {
         this.descriptionBullets.add(bullet);
     }
-    removeDescriptionBullet(String bullet) {
+    public void removeDescriptionBullet(String bullet) {
         this.descriptionBullets.remove(bullet);
     }
     public String getTitle() {
