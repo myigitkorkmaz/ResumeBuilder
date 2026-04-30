@@ -1,8 +1,9 @@
 import java.util.ArrayList;
 
+// Controls how the resume looks when exported — font, style, and section order. Pick Classic, Modern, or Minimal.
 public class Template {
     private String templateName;
-    private ArrayList<String> order = new ArrayList();
+    private ArrayList<String> order = new ArrayList<>();
     private String font;
     private float fontSize;
     private String style;
@@ -32,6 +33,10 @@ public class Template {
 
     public void setStyle(String style){
         this.style = style; 
+    }
+
+    public String getName() {
+        return templateName;
     }
 
     public ArrayList<String> getOrder(){

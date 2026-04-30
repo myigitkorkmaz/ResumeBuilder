@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 
+// One job entry — company, title, dates, and bullet points describing what was done there.
 public class WorkExperience {
     private String company;
     private String title;

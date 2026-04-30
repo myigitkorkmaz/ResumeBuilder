@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+// Represents a single project — title, dates, and a list of description bullets.
 public class Project {
     private String title;
     private String startDate;
@@ -27,9 +28,8 @@ public class Project {
     public void removeDescriptionBullet(String bullet) {
         this.descriptionBullets.remove(bullet);
     }
-    public String getTitle() {
-        return title;
-    }
-
-
+    public String getTitle()                          { return title; }
+    public String getStartDate()                      { return startDate; }
+    public String getEndDate()                        { return endDate; }
+    public ArrayList<String> getDescriptionBullets()  { return descriptionBullets; }
 }

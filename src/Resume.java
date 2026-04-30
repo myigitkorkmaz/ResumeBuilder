@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 
+// The actual resume object. Holds all sections together — think of it as the final product before export.
 public class Resume {
     private PersonalInfo personalInfo;
     private ArrayList<Education> education;
     private ArrayList<WorkExperience> workExperience;
     private ArrayList<Skill> skills;
     private ArrayList<Project> projects;
-    private ArrayList<Hobbies> hobbies;
     private Template template;
 
     // Constructor
@@ -15,7 +15,6 @@ public class Resume {
         this.workExperience = new ArrayList<>();
         this.skills = new ArrayList<>();
         this.projects = new ArrayList<>();
-        this.hobbies = new ArrayList<>();
     }
 
     // Setters
@@ -44,9 +43,6 @@ public class Resume {
         this.projects.add(project);
     }
 
-    public void addHobby(Hobbies hobby) {
-        this.hobbies.add(hobby);
-    }
 
     // Remove methods
     public void removeEducation(Education education) {
@@ -65,9 +61,6 @@ public class Resume {
         this.projects.remove(project);
     }
 
-    public void removeHobby(Hobbies hobby) {
-        this.hobbies.remove(hobby);
-    }
 
     // Getters
     public PersonalInfo getPersonalInfo() {
@@ -94,7 +87,4 @@ public class Resume {
         return projects;
     }
 
-    public ArrayList<Hobbies> getHobbies() {
-        return hobbies;
-    }
 }

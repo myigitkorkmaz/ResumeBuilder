@@ -1,5 +1,6 @@
 
 
+// A single skill entry. Kept simple on purpose — just a name/description string.
 public class Skill {
     private String description;
 

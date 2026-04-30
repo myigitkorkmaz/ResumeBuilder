@@ -1,5 +1,6 @@
 
 
+// Holds all the contact details that go at the top of the resume — name, email, phone, LinkedIn, GitHub.
 public class PersonalInfo {
     private String name;
     private String email;

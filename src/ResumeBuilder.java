@@ -1,3 +1,4 @@
+// Sits between the UI and the Resume object. Handles adding, removing, and building the resume step by step.
 public class ResumeBuilder {
     private Resume resume;
 
@@ -36,10 +37,6 @@ public class ResumeBuilder {
         return this;
     }
 
-    public ResumeBuilder addHobby(Hobbies hobby) {
-        resume.addHobby(hobby);
-        return this;
-    }
 
     // Remove methods with chaining
     public ResumeBuilder removeEducation(int index) {
@@ -70,12 +67,6 @@ public class ResumeBuilder {
         return this;
     }
 
-    public ResumeBuilder removeHobby(int index) {
-        if (index >= 0 && index < resume.getHobbies().size()) {
-            resume.removeHobby(resume.getHobbies().get(index));
-        }
-        return this;
-    }
 
     // Clear all sections (useful for UI reset)
     public ResumeBuilder clearEducation() {
@@ -98,10 +89,6 @@ public class ResumeBuilder {
         return this;
     }
 
-    public ResumeBuilder clearHobbies() {
-        resume.getHobbies().clear();
-        return this;
-    }
 
     // Build method
     public Resume build() {
