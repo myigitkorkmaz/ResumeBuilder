@@ -12,6 +12,14 @@ public class WorkExperience {
         this.descriptionBullets = new ArrayList<>();
     }
 
+    public WorkExperience(String company, String title, String startDate, String endDate, ArrayList<String> descriptionBullets) {
+        this.company = company;
+        this.title = title;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.descriptionBullets = descriptionBullets;
+    }
+
     public void setCompany(String company) {
         this.company = company;
     }

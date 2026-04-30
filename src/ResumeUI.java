@@ -1,9 +1,13 @@
-import javax.swing.*;
-import java.awt.*;
 
+
+import java.awt.*;
+import java.util.ArrayList;
+import javax.swing.*;
 public class ResumeUI extends JFrame {
 
-    private JTabbedPane tabbedPane;
+    private final JTabbedPane tabbedPane;
+
+    private final ResumeBuilder builder;
 
     // Personal Info
     private JTextField nameField, emailField, phoneField, linkedInField, gitHubField;
@@ -32,6 +36,7 @@ public class ResumeUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(620, 520);
         setLayout(new BorderLayout());
+        this.builder = new ResumeBuilder();
 
         tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Personal Info",  buildPersonalInfoPanel());
@@ -238,9 +243,10 @@ public class ResumeUI extends JFrame {
             return;
         }
 
-        // TODO: PersonalInfo info = new PersonalInfo(name, email,
-        //           phoneField.getText(), linkedInField.getText(), gitHubField.getText());
-        // TODO: builder.setPersonalInfo(info);
+
+        PersonalInfo info = new PersonalInfo(name, email, phoneField.getText(), linkedInField.getText(), gitHubField.getText());
+        builder.setPersonalInfo(info);
+        
 
         JOptionPane.showMessageDialog(this,
             "Personal info saved!", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -258,8 +264,9 @@ public class ResumeUI extends JFrame {
             return;
         }
 
-        // TODO: Education edu = new Education(school, degree, year);
-        // TODO: builder.addEducation(edu);
+        Education edu = new Education(school, degree, year);
+        builder.addEducation(edu);
+        
 
         educationList.append(school + " — " + degree + " (" + year + ")\n");
         schoolField.setText(""); degreeField.setText(""); gradYearField.setText("");
@@ -276,10 +283,10 @@ public class ResumeUI extends JFrame {
             return;
         }
 
-        // TODO: WorkExperience job = new WorkExperience(
-        //           company, title, startDateField.getText(), endDateField.getText());
-        // TODO: job.addDescriptionBullet(workBulletField.getText());
-        // TODO: builder.addWorkExperience(job);
+        WorkExperience job = new WorkExperience(company, title, startDateField.getText(), endDateField.getText(), new ArrayList<>(java.util.Arrays.asList(workBulletField.getText().split("\n"))));
+
+        builder.addWorkExperience(job);
+        
 
         workList.append(company + " — " + title
             + " (" + startDateField.getText() + " to " + endDateField.getText() + ")\n");
@@ -297,10 +304,10 @@ public class ResumeUI extends JFrame {
             return;
         }
 
-        // TODO: Project proj = new Project(projTitle,
-        //           projectStartField.getText(), projectEndField.getText());
-        // TODO: proj.addDescriptionBullet(projectBulletField.getText());
-        // TODO: builder.addProject(proj);
+        Project proj = new Project(projTitle, projectStartField.getText(), projectEndField.getText());
+        proj.addDescriptionBullet(projectBulletField.getText());
+        builder.addProject(proj);
+        
 
         projectList.append(projTitle
             + " (" + projectStartField.getText() + " to " + projectEndField.getText() + ")\n");
@@ -318,8 +325,8 @@ public class ResumeUI extends JFrame {
             return;
         }
 
-        // TODO: Skill s = new Skill(skill);
-        // TODO: builder.addSkill(s);
+        Skill s = new Skill(skill);
+        builder.addSkill(s);
 
         skillList.append(skill + "\n");
         skillField.setText("");
@@ -328,8 +335,10 @@ public class ResumeUI extends JFrame {
     private void selectTemplate() {
         String selected = (String) templateComboBox.getSelectedItem();
 
-        // TODO: Template t = new Template(selected, null, "Arial", "default");
-        // TODO: builder.setTemplate(t);
+
+            Template t = new Template(selected, new ArrayList<>(java.util.Arrays.asList("personalInfo", "education", "workExperience", "projects", "skills")), "Arial", "default");
+            builder.setTemplate(t);
+       
 
         JOptionPane.showMessageDialog(this,
             "Template \"" + selected + "\" selected.",
@@ -337,13 +346,18 @@ public class ResumeUI extends JFrame {
     }
 
     private void exportResume(String format) {
-        // TODO: Resume resume = builder.buildResume();
-        // TODO: if (format.equals("PDF")) new PDFExporter().export(resume);
-        // TODO: else                       new TXTExporter().export(resume);
 
-        JOptionPane.showMessageDialog(this,
-            "Export as " + format + " — coming soon!",
+        Resume resume = builder.build();
+        
+
+        if (format.equals("PDF")) {
+            PDFExporter.export(resume);
+            JOptionPane.showMessageDialog(this,
+            "Exporting as " + format,
             "Export", JOptionPane.INFORMATION_MESSAGE);
+        } 
+
+        
     }
 
     // ── Utility ─────────────────────────────────────────────────────────────
