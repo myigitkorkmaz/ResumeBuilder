@@ -1,4 +1,5 @@
 
+// Stores a single education entry — school, degree, and graduation year.
 public class Education {
     private String school;
     private String graduationYear;

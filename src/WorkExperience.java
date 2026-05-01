@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 
+// One job entry — company, title, dates, and bullet points describing what was done there.
 public class WorkExperience {
     private String company;
     private String title;
@@ -10,6 +11,14 @@ public class WorkExperience {
 
     public WorkExperience() {
         this.descriptionBullets = new ArrayList<>();
+    }
+
+    public WorkExperience(String company, String title, String startDate, String endDate, ArrayList<String> descriptionBullets) {
+        this.company = company;
+        this.title = title;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.descriptionBullets = descriptionBullets;
     }
 
     public void setCompany(String company) {

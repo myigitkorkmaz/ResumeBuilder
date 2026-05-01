@@ -1,28 +1,35 @@
 import java.util.ArrayList;
+// Represents a single project — title, dates, and a list of description bullets.
 public class Project {
     private String title;
     private String startDate;
     private String endDate;
     private ArrayList<String> descriptionBullets;
 
-    setTitle(String title) {
+    public Project(String title, String startDate, String endDate) {
+        this.title = title;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.descriptionBullets = new ArrayList<>();
+    }
+
+    public void setTitle(String title) {
         this.title = title;
     }
-    setStartDate(String startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
-    setEndDate(String endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
-    addDescriptionBullet(String bullet) {
+    public void addDescriptionBullet(String bullet) {
         this.descriptionBullets.add(bullet);
     }
-    removeDescriptionBullet(String bullet) {
+    public void removeDescriptionBullet(String bullet) {
         this.descriptionBullets.remove(bullet);
     }
-    public String getTitle() {
-        return title;
-    }
-
-
+    public String getTitle()                          { return title; }
+    public String getStartDate()                      { return startDate; }
+    public String getEndDate()                        { return endDate; }
+    public ArrayList<String> getDescriptionBullets()  { return descriptionBullets; }
 }

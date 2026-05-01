@@ -1,28 +1,39 @@
-import javax.swing.*;
-import java.awt.*;
 
+
+import java.awt.*;
+import java.util.ArrayList;
+import javax.swing.*;
+// The main window of the app. Each tab handles a different section of the resume.
 public class ResumeUI extends JFrame {
 
-    private JTabbedPane tabbedPane;
+    private final JTabbedPane tabbedPane;
+
+    private final ResumeBuilder builder;
 
     // Personal Info
     private JTextField nameField, emailField, phoneField, linkedInField, gitHubField;
 
     // Education
     private JTextField schoolField, degreeField, gradYearField;
-    private JTextArea educationList;
+    private DefaultListModel<String> educationModel = new DefaultListModel<>();
+    private JList<String> educationListView;
 
     // Work Experience
-    private JTextField companyField, titleField, startDateField, endDateField, workBulletField;
-    private JTextArea workList;
+    private JTextField companyField, titleField, startDateField, endDateField;
+    private JTextArea workBulletField;
+    private DefaultListModel<String> workModel = new DefaultListModel<>();
+    private JList<String> workListView;
 
     // Projects
-    private JTextField projectTitleField, projectStartField, projectEndField, projectBulletField;
-    private JTextArea projectList;
+    private JTextField projectTitleField, projectStartField, projectEndField;
+    private JTextArea projectBulletField;
+    private DefaultListModel<String> projectModel = new DefaultListModel<>();
+    private JList<String> projectListView;
 
     // Skills
     private JTextField skillField;
-    private JTextArea skillList;
+    private DefaultListModel<String> skillModel = new DefaultListModel<>();
+    private JList<String> skillListView;
 
     // Template
     private JComboBox<String> templateComboBox;
@@ -32,6 +43,7 @@ public class ResumeUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(620, 520);
         setLayout(new BorderLayout());
+        this.builder = new ResumeBuilder();
 
         tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Personal Info",  buildPersonalInfoPanel());
@@ -92,11 +104,23 @@ public class ResumeUI extends JFrame {
         addBtn.addActionListener(e -> addEducation());
         form.add(addBtn);
 
-        educationList = new JTextArea(6, 30);
-        educationList.setEditable(false);
+        educationListView = new JList<>(educationModel);
+        educationListView.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        JPanel listButtons = new JPanel();
+        JButton eduEdit = new JButton("Edit Selected");
+        JButton eduRemove = new JButton("Remove Selected");
+        eduEdit.addActionListener(e -> editEducation());
+        eduRemove.addActionListener(e -> removeEducation());
+        listButtons.add(eduEdit);
+        listButtons.add(eduRemove);
+
+        JPanel listPanel = new JPanel(new BorderLayout());
+        listPanel.add(new JScrollPane(educationListView), BorderLayout.CENTER);
+        listPanel.add(listButtons, BorderLayout.SOUTH);
 
         panel.add(form, BorderLayout.NORTH);
-        panel.add(new JScrollPane(educationList), BorderLayout.CENTER);
+        panel.add(listPanel, BorderLayout.CENTER);
         return panel;
     }
 
@@ -111,24 +135,40 @@ public class ResumeUI extends JFrame {
         titleField      = new JTextField(25);
         startDateField  = new JTextField(25);
         endDateField    = new JTextField(25);
-        workBulletField = new JTextField(25);
+        workBulletField = new JTextArea(3, 25);
+        workBulletField.setLineWrap(true);
+        workBulletField.setWrapStyleWord(true);
 
         addLabeledField(form, "Company:",            companyField);
         addLabeledField(form, "Title:",              titleField);
         addLabeledField(form, "Start Date:",         startDateField);
         addLabeledField(form, "End Date:",           endDateField);
-        addLabeledField(form, "Description Bullet:", workBulletField);
+        form.add(new JLabel("Description Bullets (one per line):"));
+        form.add(new JScrollPane(workBulletField));
+        form.add(Box.createVerticalStrut(6));
 
         form.add(Box.createVerticalStrut(10));
         JButton addBtn = new JButton("Add Work Experience");
         addBtn.addActionListener(e -> addWorkExperience());
         form.add(addBtn);
 
-        workList = new JTextArea(5, 30);
-        workList.setEditable(false);
+        workListView = new JList<>(workModel);
+        workListView.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        JPanel listButtons = new JPanel();
+        JButton workEdit = new JButton("Edit Selected");
+        JButton workRemove = new JButton("Remove Selected");
+        workEdit.addActionListener(e -> editWorkExperience());
+        workRemove.addActionListener(e -> removeWorkExperience());
+        listButtons.add(workEdit);
+        listButtons.add(workRemove);
+
+        JPanel listPanel = new JPanel(new BorderLayout());
+        listPanel.add(new JScrollPane(workListView), BorderLayout.CENTER);
+        listPanel.add(listButtons, BorderLayout.SOUTH);
 
         panel.add(form, BorderLayout.NORTH);
-        panel.add(new JScrollPane(workList), BorderLayout.CENTER);
+        panel.add(listPanel, BorderLayout.CENTER);
         return panel;
     }
 
@@ -142,23 +182,39 @@ public class ResumeUI extends JFrame {
         projectTitleField  = new JTextField(25);
         projectStartField  = new JTextField(25);
         projectEndField    = new JTextField(25);
-        projectBulletField = new JTextField(25);
+        projectBulletField = new JTextArea(3, 25);
+        projectBulletField.setLineWrap(true);
+        projectBulletField.setWrapStyleWord(true);
 
         addLabeledField(form, "Project Title:",      projectTitleField);
         addLabeledField(form, "Start Date:",         projectStartField);
         addLabeledField(form, "End Date:",           projectEndField);
-        addLabeledField(form, "Description Bullet:", projectBulletField);
+        form.add(new JLabel("Description Bullets (one per line):"));
+        form.add(new JScrollPane(projectBulletField));
+        form.add(Box.createVerticalStrut(6));
 
         form.add(Box.createVerticalStrut(10));
         JButton addBtn = new JButton("Add Project");
         addBtn.addActionListener(e -> addProject());
         form.add(addBtn);
 
-        projectList = new JTextArea(5, 30);
-        projectList.setEditable(false);
+        projectListView = new JList<>(projectModel);
+        projectListView.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        JPanel listButtons = new JPanel();
+        JButton projEdit = new JButton("Edit Selected");
+        JButton projRemove = new JButton("Remove Selected");
+        projEdit.addActionListener(e -> editProject());
+        projRemove.addActionListener(e -> removeProject());
+        listButtons.add(projEdit);
+        listButtons.add(projRemove);
+
+        JPanel listPanel = new JPanel(new BorderLayout());
+        listPanel.add(new JScrollPane(projectListView), BorderLayout.CENTER);
+        listPanel.add(listButtons, BorderLayout.SOUTH);
 
         panel.add(form, BorderLayout.NORTH);
-        panel.add(new JScrollPane(projectList), BorderLayout.CENTER);
+        panel.add(listPanel, BorderLayout.CENTER);
         return panel;
     }
 
@@ -177,11 +233,23 @@ public class ResumeUI extends JFrame {
         addBtn.addActionListener(e -> addSkill());
         form.add(addBtn);
 
-        skillList = new JTextArea(8, 30);
-        skillList.setEditable(false);
+        skillListView = new JList<>(skillModel);
+        skillListView.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        JPanel listButtons = new JPanel();
+        JButton skillEdit = new JButton("Edit Selected");
+        JButton skillRemove = new JButton("Remove Selected");
+        skillEdit.addActionListener(e -> editSkill());
+        skillRemove.addActionListener(e -> removeSkill());
+        listButtons.add(skillEdit);
+        listButtons.add(skillRemove);
+
+        JPanel listPanel = new JPanel(new BorderLayout());
+        listPanel.add(new JScrollPane(skillListView), BorderLayout.CENTER);
+        listPanel.add(listButtons, BorderLayout.SOUTH);
 
         panel.add(form, BorderLayout.NORTH);
-        panel.add(new JScrollPane(skillList), BorderLayout.CENTER);
+        panel.add(listPanel, BorderLayout.CENTER);
         return panel;
     }
 
@@ -238,9 +306,10 @@ public class ResumeUI extends JFrame {
             return;
         }
 
-        // TODO: PersonalInfo info = new PersonalInfo(name, email,
-        //           phoneField.getText(), linkedInField.getText(), gitHubField.getText());
-        // TODO: builder.setPersonalInfo(info);
+
+        PersonalInfo info = new PersonalInfo(name, email, phoneField.getText(), linkedInField.getText(), gitHubField.getText());
+        builder.setPersonalInfo(info);
+        
 
         JOptionPane.showMessageDialog(this,
             "Personal info saved!", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -258,10 +327,11 @@ public class ResumeUI extends JFrame {
             return;
         }
 
-        // TODO: Education edu = new Education(school, degree, year);
-        // TODO: builder.addEducation(edu);
+        Education edu = new Education(school, year, degree);
+        builder.addEducation(edu);
+        
 
-        educationList.append(school + " — " + degree + " (" + year + ")\n");
+        educationModel.addElement(school + " — " + degree + " (" + year + ")");
         schoolField.setText(""); degreeField.setText(""); gradYearField.setText("");
     }
 
@@ -276,13 +346,15 @@ public class ResumeUI extends JFrame {
             return;
         }
 
-        // TODO: WorkExperience job = new WorkExperience(
-        //           company, title, startDateField.getText(), endDateField.getText());
-        // TODO: job.addDescriptionBullet(workBulletField.getText());
-        // TODO: builder.addWorkExperience(job);
+        WorkExperience job = new WorkExperience(company, title, startDateField.getText(), endDateField.getText(), new ArrayList<>());
+        for (String b : workBulletField.getText().split("\n"))
+            if (!b.trim().isEmpty()) job.addDescriptionBullet(b.trim());
 
-        workList.append(company + " — " + title
-            + " (" + startDateField.getText() + " to " + endDateField.getText() + ")\n");
+        builder.addWorkExperience(job);
+        
+
+        workModel.addElement(company + " — " + title
+            + " (" + startDateField.getText() + " to " + endDateField.getText() + ")");
         companyField.setText(""); titleField.setText("");
         startDateField.setText(""); endDateField.setText(""); workBulletField.setText("");
     }
@@ -297,13 +369,14 @@ public class ResumeUI extends JFrame {
             return;
         }
 
-        // TODO: Project proj = new Project(projTitle,
-        //           projectStartField.getText(), projectEndField.getText());
-        // TODO: proj.addDescriptionBullet(projectBulletField.getText());
-        // TODO: builder.addProject(proj);
+        Project proj = new Project(projTitle, projectStartField.getText(), projectEndField.getText());
+        for (String b : projectBulletField.getText().split("\n"))
+            if (!b.trim().isEmpty()) proj.addDescriptionBullet(b.trim());
+        builder.addProject(proj);
+        
 
-        projectList.append(projTitle
-            + " (" + projectStartField.getText() + " to " + projectEndField.getText() + ")\n");
+        projectModel.addElement(projTitle
+            + " (" + projectStartField.getText() + " to " + projectEndField.getText() + ")");
         projectTitleField.setText(""); projectStartField.setText("");
         projectEndField.setText(""); projectBulletField.setText("");
     }
@@ -318,18 +391,93 @@ public class ResumeUI extends JFrame {
             return;
         }
 
-        // TODO: Skill s = new Skill(skill);
-        // TODO: builder.addSkill(s);
+        Skill s = new Skill(skill);
+        builder.addSkill(s);
 
-        skillList.append(skill + "\n");
+        skillModel.addElement(skill);
         skillField.setText("");
+    }
+
+    private void removeEducation() {
+        int i = educationListView.getSelectedIndex();
+        if (i < 0) { JOptionPane.showMessageDialog(this, "Select an entry to remove."); return; }
+        builder.removeEducation(i);
+        educationModel.remove(i);
+    }
+
+    private void editEducation() {
+        int i = educationListView.getSelectedIndex();
+        if (i < 0) { JOptionPane.showMessageDialog(this, "Select an entry to edit."); return; }
+        Education e = builder.getCurrentResume().getEducation().get(i);
+        schoolField.setText(e.getSchool());
+        degreeField.setText(e.getDegree());
+        gradYearField.setText(e.getGraduationYear());
+        builder.removeEducation(i);
+        educationModel.remove(i);
+    }
+
+    private void removeWorkExperience() {
+        int i = workListView.getSelectedIndex();
+        if (i < 0) { JOptionPane.showMessageDialog(this, "Select an entry to remove."); return; }
+        builder.removeWorkExperience(i);
+        workModel.remove(i);
+    }
+
+    private void editWorkExperience() {
+        int i = workListView.getSelectedIndex();
+        if (i < 0) { JOptionPane.showMessageDialog(this, "Select an entry to edit."); return; }
+        WorkExperience w = builder.getCurrentResume().getWorkExperience().get(i);
+        companyField.setText(w.getCompany());
+        titleField.setText(w.getTitle());
+        startDateField.setText(w.getStartDate());
+        endDateField.setText(w.getEndDate());
+        workBulletField.setText(String.join("\n", w.getDescriptionBullets()));
+        builder.removeWorkExperience(i);
+        workModel.remove(i);
+    }
+
+    private void removeProject() {
+        int i = projectListView.getSelectedIndex();
+        if (i < 0) { JOptionPane.showMessageDialog(this, "Select an entry to remove."); return; }
+        builder.removeProject(i);
+        projectModel.remove(i);
+    }
+
+    private void editProject() {
+        int i = projectListView.getSelectedIndex();
+        if (i < 0) { JOptionPane.showMessageDialog(this, "Select an entry to edit."); return; }
+        Project p = builder.getCurrentResume().getProjects().get(i);
+        projectTitleField.setText(p.getTitle());
+        projectStartField.setText(p.getStartDate());
+        projectEndField.setText(p.getEndDate());
+        projectBulletField.setText(String.join("\n", p.getDescriptionBullets()));
+        builder.removeProject(i);
+        projectModel.remove(i);
+    }
+
+    private void removeSkill() {
+        int i = skillListView.getSelectedIndex();
+        if (i < 0) { JOptionPane.showMessageDialog(this, "Select an entry to remove."); return; }
+        builder.removeSkill(i);
+        skillModel.remove(i);
+    }
+
+    private void editSkill() {
+        int i = skillListView.getSelectedIndex();
+        if (i < 0) { JOptionPane.showMessageDialog(this, "Select an entry to edit."); return; }
+        Skill s = builder.getCurrentResume().getSkills().get(i);
+        skillField.setText(s.getDescription());
+        builder.removeSkill(i);
+        skillModel.remove(i);
     }
 
     private void selectTemplate() {
         String selected = (String) templateComboBox.getSelectedItem();
 
-        // TODO: Template t = new Template(selected, null, "Arial", "default");
-        // TODO: builder.setTemplate(t);
+
+            Template t = new Template(selected, new ArrayList<>(java.util.Arrays.asList("personalInfo", "education", "workExperience", "projects", "skills")), "Arial", "default");
+            builder.setTemplate(t);
+       
 
         JOptionPane.showMessageDialog(this,
             "Template \"" + selected + "\" selected.",
@@ -337,13 +485,20 @@ public class ResumeUI extends JFrame {
     }
 
     private void exportResume(String format) {
-        // TODO: Resume resume = builder.buildResume();
-        // TODO: if (format.equals("PDF")) new PDFExporter().export(resume);
-        // TODO: else                       new TXTExporter().export(resume);
 
-        JOptionPane.showMessageDialog(this,
-            "Export as " + format + " — coming soon!",
-            "Export", JOptionPane.INFORMATION_MESSAGE);
+        Resume resume = builder.build();
+        
+
+        if (format.equals("PDF")) {
+            PDFExporter.export(resume);
+            JOptionPane.showMessageDialog(this,
+                "Exporting as " + format,
+                "Export", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            TXTExporter.export(resume);
+        }
+
+        
     }
 
     // ── Utility ─────────────────────────────────────────────────────────────
