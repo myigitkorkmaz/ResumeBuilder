@@ -1,0 +1,11 @@
+# Compiled output
+bin/
+out/
+*.class
+
+# Exported resumes
+*.pdf
+*.txt
+
+# OS
+.DS_Store
